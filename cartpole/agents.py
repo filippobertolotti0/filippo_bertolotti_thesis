@@ -9,7 +9,7 @@ import collections
 Transition = collections.namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
 
 class Q_learning_Agent:
-    """a Q-Learning agent for the cart-pole problem"""
+    """Q-Learning agent for the cart-pole problem"""
 
     def __init__(self, action_space, learning_rate, discount_factor, epsilon, epsilon_decay_value):
         """setup the agent"""
@@ -141,13 +141,11 @@ class DQN_Agent:
             loss.backward()
             self.policy_net.optimizer.step()
 
-            # Update the target Q-network in each 50 steps
             self.c += 1
             if self.c % 50 == 0:
                 self.target_net.net.load_state_dict(self.policy_net.net.state_dict())
 
     def test(self):
-        # Evaluates the performance of the agent over 20 episodes.
         max_t = 1000
         state, _ = self.environment.reset()
         total_reward = 0
