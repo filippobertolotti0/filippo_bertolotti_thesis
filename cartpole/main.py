@@ -2,7 +2,6 @@ import sys
 sys.path.append('c:/Users/filip/Desktop/politecnico/tesi')
 
 import gym
-import pygame
 from cartpole.agents import Q_learning_Agent, DQN_Agent
 import numpy as np
 import math
