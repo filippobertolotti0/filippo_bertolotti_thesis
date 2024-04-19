@@ -1,0 +1,15 @@
+----DDPG----
+Mean reward/episode: -172.52117767333985
+Best reward: (-1.1179779,)
+Execution time: 74.5133764743805 seconds
+
+----SAC----
+Mean reward/episode: -166.7508351135254
+Best reward: (-0.037336994,)
+Execution time: 117.02625036239624 seconds
+
+----TD3----
+Mean reward/episode: -156.47352630615234
+Best reward: (-9.823396,)
+Execution time: 59.69494152069092 seconds
+
