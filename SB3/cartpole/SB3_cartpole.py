@@ -9,9 +9,9 @@ from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import DummyVecEnv
 
 class CustomCallback(BaseCallback):
-    def __init__(self, rewards: list, verbose=1):
+    def __init__(self, verbose=1):
         super(CustomCallback, self).__init__(verbose)
-        self.rewards = rewards
+        self.rewards = []
         self.episode_rewards = 0
         
     def _on_step(self) -> bool:
@@ -36,8 +36,9 @@ if __name__ == "__main__":
     for model_name, model_class in models.items():
         vec_env = DummyVecEnv([lambda: gym.make("CartPole-v1") for _ in range(num_cpu)])
         model = model_class("MlpPolicy", vec_env)
-        callback = CustomCallback(rewards=[])
+        callback = CustomCallback()
         
+        #training
         print(f"----{model_name}----")
         print("start training\ntraining...")
         start_time = time.time()
@@ -49,6 +50,7 @@ if __name__ == "__main__":
         obs = vec_env.reset()
         done = np.array([False for _ in range(vec_env.num_envs)])
         
+        #testing
         print("start evaluation")
         i = 0
         episode_reward = np.zeros(vec_env.num_envs)
@@ -64,17 +66,20 @@ if __name__ == "__main__":
                     episode_reward[index] = 0
                     i += 1
                     pbar.update(1)
-            
+        
+        #save results
         with open("SB3/cartpole/results.txt", 'a') as f:
             f.write(f"----{model_name}----\n")  
             f.write(f"Mean reward/episode: {cumulative_reward/100}\n")
             f.write(f"Best reward: {best_reward}\n")
             f.write(f"Execution time: {(time.time() - start_time)} seconds\n\n")
         
+        #print results
         print(f"Mean reward/episode: {cumulative_reward/100}")
         print(f"Best reward: {best_reward}")
         print(f"Execution time: {(time.time() - start_time)} seconds\n")
         
+        #plot training progress
         plt.figure()
         plt.plot(callback.rewards)
         plt.xlabel("Episode")

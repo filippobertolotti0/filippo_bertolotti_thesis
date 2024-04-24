@@ -9,9 +9,9 @@ from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import DummyVecEnv
 
 class CustomCallback(BaseCallback):
-    def __init__(self, rewards: list, verbose=1):
+    def __init__(self, verbose=1):
         super(CustomCallback, self).__init__(verbose)
-        self.rewards = rewards
+        self.rewards = []
         self.episode_rewards = [0 for _ in range(4)]
         
     def _on_step(self) -> bool:
@@ -36,18 +36,20 @@ if __name__ == "__main__":
     for model_name, model_class in models.items():
         vec_env = DummyVecEnv([lambda: gym.make("Pendulum-v1") for _ in range(num_cpu)])
         model = model_class("MlpPolicy", vec_env)
-        callback = CustomCallback(rewards=[])
+        callback = CustomCallback()
         
+        #training
         print(f"----{model_name}----")
         print("start training\ntraining...")
         start_time = time.time()
-        model.learn(total_timesteps=25000, callback=callback, progress_bar=True)
+        model.learn(total_timesteps=25000, callback=callback, progress_bar=True) #125 episodes
 
         obs = vec_env.reset()
 
         best_reward = float("-inf")
         cumulative_reward = 0
 
+        #testing
         done = np.array([False for _ in range(vec_env.num_envs)])
         print("start evaluation")
         for i in tqdm(range(25)):
@@ -62,14 +64,20 @@ if __name__ == "__main__":
                 if er > best_reward:
                     best_reward = er,
             cumulative_reward += episode_reward.sum()
-            obs = vec_env.reset()
         
+        #save results
         with open("SB3/pendulum/results.txt", 'a') as f:
             f.write(f"----{model_name}----\n")  
             f.write(f"Mean reward/episode: {cumulative_reward/100}\n")
             f.write(f"Best reward: {best_reward}\n")
             f.write(f"Execution time: {(time.time() - start_time)} seconds\n\n")
         
+        #print results
+        print(f"Mean reward/episode: {cumulative_reward/100}")
+        print(f"Best reward: {best_reward}")
+        print(f"Execution time: {(time.time() - start_time)} seconds\n")
+        
+        #plot training progress
         plt.figure()
         plt.plot(callback.rewards)
         plt.xlabel("Episode")
@@ -77,5 +85,3 @@ if __name__ == "__main__":
         plt.title(f"Pendulum-v1: {model_name}")
         plt.tight_layout()
         plt.savefig(f"./SB3/pendulum/graphs/Pendulum_{model_name}.png")
-        
-        print("")
