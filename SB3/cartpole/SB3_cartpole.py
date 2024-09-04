@@ -1,5 +1,5 @@
 from stable_baselines3 import DQN, PPO, A2C, SAC, TD3
-import gymnasium as gym
+import gym
 import torch
 import time
 from tqdm import tqdm
@@ -24,9 +24,9 @@ class CustomCallback(BaseCallback):
         return True
     
 models = {
-    "DQN": DQN,
+    # "DQN": DQN,
     "A2C": A2C,
-    "PPO": PPO,
+    # "PPO": PPO,
 }
 
 if __name__ == "__main__":
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         print(f"----{model_name}----")
         print("start training\ntraining...")
         start_time = time.time()
-        model.learn(total_timesteps=100000, callback=callback, progress_bar=True)
+        model.learn(total_timesteps=100, callback=callback, progress_bar=True)
 
         best_reward = float("-inf")
         cumulative_reward = 0

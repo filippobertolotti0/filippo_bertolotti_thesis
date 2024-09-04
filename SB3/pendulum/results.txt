@@ -13,3 +13,11 @@ Mean reward/episode: -156.47352630615234
 Best reward: (-9.823396,)
 Execution time: 59.69494152069092 seconds
 
+----PPO----
+Mean reward/episode: -149.17841033935548
+Best reward: (-0.1311861,)
+Execution time: 609.2148222923279 seconds----A2C----
+Mean reward/episode: -8.309227676391602
+Best reward: (-7.010832,)
+Execution time: 194.83218955993652 seconds
+
